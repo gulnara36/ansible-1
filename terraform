@@ -1,0 +1,59 @@
+resource "aws_vpc" "final-project-vpc" {
+  cidr_block       = "10.0.0.0/16"
+  instance_tenancy = "default"
+  tags = {
+    Name = "terraform-final-project-vpc"
+  }
+}
+resource "aws_internet_gateway" "final-project-ig" {
+  vpc_id = aws_vpc.final-project-vpc.id
+  tags = {
+    Name = "terraform-final-project-int-gateway"
+  }
+}
+resource "aws_subnet" "final-project-public-subnet1" {
+  vpc_id     = aws_vpc.final-project-vpc.id
+  cidr_block = "10.0.0.0/24"
+  tags = {
+    Name = "public-subnet1"
+  }
+}
+resource "aws_subnet" "final-project-public-subnet2" {
+  vpc_id     = aws_vpc.final-project-vpc.id
+  cidr_block = "10.0.1.0/24"
+  tags = {
+    Name = "public-subnet2"
+  }
+}
+resource "aws_route_table" "final-project-rt" {
+  vpc_id = aws_vpc.final-project-vpc.id
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.final-project-ig.id
+  }
+  tags = {
+    Name = "finalpr-public-rt"
+  }
+}
+
+resource "aws_route_table_association" "public-association1" {
+  subnet_id      = aws_subnet.final-project-public-subnet1.id
+  route_table_id = aws_route_table.final-project-rt.id
+}
+resource "aws_route_table_association" "public-association2" {
+  subnet_id      = aws_subnet.final-project-public-subnet2.id
+  route_table_id = aws_route_table.final-project-rt.id
+}
+resource "aws_eip" "final-project-eip" {
+  vpc = true
+  tags = {
+    Name = "fpr-eip"
+  }
+}
+resource "aws_nat_gateway" "fp-nat-gw" {
+  allocation_id = aws_eip.final-project-eip.id
+  subnet_id     = aws_subnet.final-project-public-subnet1.id
+  tags = {
+    Name = "fp-nat-gw"
+  }
+}
