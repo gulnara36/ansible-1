@@ -5,7 +5,7 @@ pipeline {
         
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'git@github.com:gulnara36/devops21-jenkins-public.git'
+                git branch: 'main', url: 'https://github.com/gulnara36/ansible-1.git'
             }
         }
 
