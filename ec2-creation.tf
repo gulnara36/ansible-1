@@ -13,11 +13,11 @@ provider "aws" {
   profile = "default"
 }
 
-resource "aws_instance" "ec2-terra-jenkins" {
+resource "aws_instance" "team2-terraform-jenkins" {
   ami           = "ami-0b0af3577fe5e3532"
   instance_type = "t2.micro"
   tags = {
-    Name  = "ec2terra-jenkins"
+    Name  = "team2terra-jenkins"
     Owner = "Gulnara"
   }
 }
